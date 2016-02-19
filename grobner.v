@@ -1,8 +1,6 @@
 Require Import Inverse_Image.
-Require Import ssreflect ssrfun ssrbool eqtype ssrnat seq choice fintype.
-Require Import tuple bigop ssralg poly.
-Require Import ssrcomplements poset freeg mpoly.
-
+From mathcomp Require Import all_ssreflect all_algebra.
+From SsrMultinomials Require Import ssrcomplements poset freeg mpoly.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -1499,18 +1497,18 @@ elim: n => [|n IH].
   apply: bar_1 => a; apply: bar_1 => b; apply: bar_0 => /=.
   by rewrite !orbF; apply/forallP => /= [[]].
 pose f (a : nat * 'X_{1..n}) := [multinom of a.1 :: a.2].
-pose R1 := [rel a b | (~~ (b.1 < a.1)) && (lem a.2 b.2)].
+pose R1 := [rel a b | ((~~ (b.1 < a.1)) && (lem a.2 b.2))%N].
 rewrite [bar_r _ _]/(bar_r (@lem _)[seq f i | i <- [::]]).
 have HR1R a b : R1 _ a b -> @lem _ (f a) (f b).
   case/andP=> aLb /forallP Ht.
   apply/mnm_lepP=> /= [[[|i] Hi]] /=.
     by rewrite /fun_of_multinom /= !(tnth_nth 0%N) /= leqNgt.
-  have := Ht (Ordinal (Hi : i < n)).
+  have := Ht (Ordinal (Hi : (i < n)%N)).
   by rewrite /fun_of_multinom !(tnth_nth 0%N) /=.
 apply: bar_r_map HR1R _ _ _ => [a|].
   case: a => t; exists (tnth t ord0, [multinom [tuple of behead t]]).
   by apply/val_eqP=> /=; apply/eqP/val_eqP; case: t => /= [[]].
-have Hlt a b : (a < b) -> (a < b)%coq_nat by move/ltP.
+have Hlt a b : (a < b)%N -> (a < b)%coq_nat by move/ltP.
 exact: bar_r_prod_nil (Wf_nat.well_founded_lt_compat _ _ _ Hlt) IH.
 Qed.
 
@@ -1554,7 +1552,7 @@ Implicit Types m : 'X_{1..n}.
 (* Order on pairs of polynomials *)
 Definition psplt (psp1 psp2 : seq {mpoly R[n]} * seq {mpoly R[n]}) :=
   (splt psp1.1 psp2.1) || 
-  ((psp1.1 == psp2.1) && (size psp1.2 < size psp2.2)).
+  ((psp1.1 == psp2.1) && (size psp1.2 < size psp2.2)%N).
 
 Lemma wf_ltn : well_founded (ltn : nat -> nat -> bool).
 Proof.

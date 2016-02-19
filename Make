@@ -1,0 +1,4 @@
+grobner.v
+
+-I .
+-R . mathcomp.contrib.grobner

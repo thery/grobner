@@ -4,7 +4,7 @@ It contains one file
 
 grobner.v
 
-It define 
+It defines 
 
 Require Import Inverse_Image.
 From mathcomp Require Import all_ssreflect all_algebra.

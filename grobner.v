@@ -174,7 +174,6 @@ Proof.
 apply: (iffP hasP)=> [[m Im /and3P[NIm /allP /=Hq /allP Hp]]|[m [Im NIm HA]]].
   exists m; split=> // m1 Lm.
   have := Hq m1; have := Hp m1; do 2 case: (_ \in _) => //=.
-Search _ (_ <= _)%O  (_ < _)%O.
     by rewrite leNgt Lm => /(_ is_true_true).
   by rewrite ltNge [(m <= _)%O]ltW // => _  /(_ is_true_true).
 exists m => //; apply/and3P; split=>//; apply/allP=> m1 Im1.

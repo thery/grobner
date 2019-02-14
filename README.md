@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/thery/grobner.svg?branch=master)](https://travis-ci.org/thery/grobner)
 
-
 # grobner
 A fornalisation of Grobner basis in ssreflect.
 It contains one file

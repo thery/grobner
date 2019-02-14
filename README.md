@@ -2,10 +2,11 @@
 A fornalisation of Grobner basis in ssreflect.
 It contains one file
 
-grobner.v
+``grobner.v``
 
 It defines 
 
+```
 Require Import Inverse_Image.
 From mathcomp Require Import all_ssreflect all_algebra.
 From SsrMultinomials Require Import ssrcomplements poset freeg mpoly.
@@ -29,4 +30,4 @@ idealfP
      : forall (R : fieldType)  (n : nat) (p : {mpoly R[n]})
               (l : seq {mpoly R[n]}),
        reflect (ideal l p) (idealf l p)
-
+```

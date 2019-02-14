@@ -1,6 +1,6 @@
 Require Import Inverse_Image.
-From mathcomp Require Import all_ssreflect all_algebra.
-From SsrMultinomials Require Import ssrcomplements order freeg mpoly.
+From mathcomp Require Import all_ssreflect all_algebra order.
+From SsrMultinomials Require Import ssrcomplements freeg mpoly.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -142,7 +142,6 @@ rewrite (nth_map i); last by rewrite size_enum_ord ltn_ord.
 rewrite nth_enum_ord; last by apply: ltn_ord.
 by rewrite mulrDl mulrA.
 Qed.
-
 
 (******************************************************************************)
 (*          Order on polynomials derived from (_ < _)%O                       *)

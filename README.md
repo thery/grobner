@@ -6,7 +6,7 @@ It contains one file
 
 It defines 
 
-```
+```coq
 Require Import Inverse_Image.
 From mathcomp Require Import all_ssreflect all_algebra.
 From SsrMultinomials Require Import ssrcomplements poset freeg mpoly.

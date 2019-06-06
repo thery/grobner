@@ -244,11 +244,11 @@ have [/eqP Eq|Dq] := boolP (mlead q == m).
   by case/negP: NIm; rewrite -Ep mlead_supp.
 right; apply/andP; split; last first.
   apply/pltP; exists m; split=> [||m1 Lm1].
-  - rewrite (perm_eq_mem (msupp_rem _ _)) (rem_filter _ (msupp_uniq _)).
+  - rewrite (perm_mem (msupp_rem _ _)) (rem_filter _ (msupp_uniq _)).
     by rewrite mem_filter /= eq_sym Dq /=.
-  - rewrite (perm_eq_mem (msupp_rem _ _)) (rem_filter _ (msupp_uniq _)).
+  - rewrite (perm_mem (msupp_rem _ _)) (rem_filter _ (msupp_uniq _)).
     by rewrite mem_filter /= eq_sym Dq.
-  rewrite !(perm_eq_mem (msupp_rem _ _)) !(rem_filter _ (msupp_uniq _)).
+  rewrite !(perm_mem (msupp_rem _ _)) !(rem_filter _ (msupp_uniq _)).
   by rewrite !mem_filter /= Lm.
 have: (mlead q <= mlead p)%O.
   apply: msupp_le_mlead; rewrite Lm ?mlead_supp //.
@@ -269,9 +269,9 @@ have [/eqP->|Zq] := boolP (q == 0); first by rewrite plt0r.
 move=> /pltP[m [Im NIm Lm]].
 have [/eqP Eq|Dq] := boolP (mlast q == m); last first.
   right; apply/pltP; exists m; split=> [||m3 Im3]//.
-    rewrite (perm_eq_mem (msupp_rem _ _)) rem_filter ?msupp_uniq //.
+    rewrite (perm_mem (msupp_rem _ _)) rem_filter ?msupp_uniq //.
     by rewrite mem_filter ?msupp_uniq //= eq_sym Dq.
-  rewrite (perm_eq_mem (msupp_rem _ _)) rem_filter ?msupp_uniq //.
+  rewrite (perm_mem (msupp_rem _ _)) rem_filter ?msupp_uniq //.
   rewrite mem_filter ?msupp_uniq /=.
   rewrite Lm // andbC ; case: (boolP (_ \in _)) => //=.
   have: (mlast q < m3)%O.
@@ -285,10 +285,10 @@ left; exists p1; exists p2; split=> //.
   apply: eq_bigl=> // m1.
   rewrite -leNgt le_eqVlt.
   by have [/eqP->|] := boolP (_ == _); first by rewrite (negPf NIm).
-- apply: uniq_perm_eq=> [||m1]; first by apply: msupp_uniq.
+- apply: uniq_perm=> [||m1]; first by apply: msupp_uniq.
     by apply/rem_uniq/msupp_uniq.
   rewrite (rem_filter _ (msupp_uniq _)).
-  rewrite mem_filter /= (perm_eq_mem (msupp_sum _ _ _))=>
+  rewrite mem_filter /= (perm_mem (msupp_sum _ _ _))=>
          [||m2 m3 Im2 Im3 Dm2m3 m4 /=].
   - apply/flattenP/andP=>[[m2 /mapP[m3]]|[Dm LL]].
       rewrite mem_filter => /andP[H1 H2] -> /msuppZ_le.
@@ -334,7 +334,7 @@ elim: {p}(size (msupp p)) {-2}p (eqxx (size (msupp p)))=> [p Ls| n1 IH1 p ES].
   suff /eqP->: p == 0 by [].
   by rewrite -msupp_eq0; case: msupp Ls.
 apply/IH/IH1.
-rewrite (perm_eq_size (msupp_rem _ _)) size_rem ?(eqP H) //.
+rewrite (perm_size (msupp_rem _ _)) size_rem ?(eqP H) //.
   by rewrite (eqP ES).
 by apply/mlast_supp; rewrite -msupp_eq0; case: msupp ES.
 Qed.
@@ -343,20 +343,20 @@ Lemma plt_msuppl (p q r : {mpoly R[n]}) :
    perm_eq (msupp p) (msupp q) -> (p < r) = (q < r).
 Proof. 
 move=> HS; apply/pltP/pltP.
-  case=> m [H1 H2 H3]; exists m; split => //; first by rewrite -(perm_eq_mem HS).
-  by move=> m1 Lm1; rewrite -(perm_eq_mem HS) H3.
-case=> m [H1 H2 H3]; exists m; split => //; first by rewrite (perm_eq_mem HS).
-by move=> m1 Lm1; rewrite (perm_eq_mem HS) H3.
+  case=> m [H1 H2 H3]; exists m; split => //; first by rewrite -(perm_mem HS).
+  by move=> m1 Lm1; rewrite -(perm_mem HS) H3.
+case=> m [H1 H2 H3]; exists m; split => //; first by rewrite (perm_mem HS).
+by move=> m1 Lm1; rewrite (perm_mem HS) H3.
 Qed.
 
 Lemma plt_msuppr (p q r : {mpoly R[n]}) : 
    perm_eq (msupp p) (msupp q) -> (r < p) = (r < q).
 Proof. 
 move=> HS; apply/pltP/pltP.
-  case=> m [H1 H2 H3]; exists m; split => //; first by rewrite -(perm_eq_mem HS).
-  by move=> m1 Lm1; rewrite -(perm_eq_mem HS) H3.
-case=> m [H1 H2 H3]; exists m; split => //; first by rewrite (perm_eq_mem HS).
-by move=> m1 Lm1; rewrite (perm_eq_mem HS) H3.
+  case=> m [H1 H2 H3]; exists m; split => //; first by rewrite -(perm_mem HS).
+  by move=> m1 Lm1; rewrite -(perm_mem HS) H3.
+case=> m [H1 H2 H3]; exists m; split => //; first by rewrite (perm_mem HS).
+by move=> m1 Lm1; rewrite (perm_mem HS) H3.
 Qed.
 
 Lemma plt_wf : well_founded plt.
@@ -371,14 +371,14 @@ have HA : Acc (fun p q0 : mpoly n R => p < q0) p1.
   apply: Acc_intro=> q2 Lq2.
   have: q2 < (q - q@_(mlast q) *: 'X_[(mlast q)]).
     rewrite (plt_msuppr _ (_ : perm_eq _ (msupp p1))) //.
-    by rewrite (perm_eq_trans (msupp_rem _ _)) // perm_eq_sym.
+    by rewrite (perm_trans (msupp_rem _ _)) // perm_sym.
   by apply: H.
 move: p2 H2; apply: mlast_ind => [_|q2 IH1 Lq2].
   by rewrite addr0.
 have [/eqP->|Zq2] := boolP (q2 == 0).
   by rewrite addr0.
 have Lp1 : forall m1, m1 \in msupp p1 -> (mlast q < m1)%O.
-  move=> m1; rewrite (perm_eq_mem H1) (rem_filter _ (msupp_uniq _)) mem_filter.
+  move=> m1; rewrite (perm_mem H1) (rem_filter _ (msupp_uniq _)) mem_filter.
   by case/andP=> /= HH /mlast_lemc; rewrite le_eqVlt eq_sym (negPf HH).
 have Lp2 : forall m1, m1 \in msupp q2 -> (m1 < mlast q)%O.
   move=> m1 Lm2.
@@ -397,7 +397,7 @@ have F1 : mlast q2 \notin msupp p1.
 have F2 : (mlast q2 < m)%O by rewrite (eqP Em) Lp2.
 have F3 : mlast (p1 + q2) = mlast q2.
   apply: mlastE=> [|m1 /msuppD_le].
-    rewrite (perm_eq_mem (msuppD _)) ?mem_cat ?mlast_supp ?orbT //.
+    rewrite (perm_mem (msuppD _)) ?mem_cat ?mlast_supp ?orbT //.
     move=> m1; apply/negP=> /andP[/Lp1 O1 /Lp2 O2].
     suff: (m1 < m1)%O by rewrite ltxx.
     by apply: lt_trans O1.
@@ -415,10 +415,10 @@ case=> JJ; apply: JJ.
 apply: IH1.
 apply/pltP; exists (mlast q); split=> //=.
 - by rewrite msuppX inE eqxx.
-- rewrite (perm_eq_mem (msupp_rem _ _)) mem_rem_uniq ?msupp_uniq // !inE negb_and.
+- rewrite (perm_mem (msupp_rem _ _)) mem_rem_uniq ?msupp_uniq // !inE negb_and.
   by rewrite mcoeff_msupp !negbK  mcoeff_gt_mlead ?eqxx ?orbT // Lp2 // mlead_supp.
 move=> m1 Lm1.
-rewrite msuppX inE (perm_eq_mem (msupp_rem _ _)) mem_rem_uniq ?msupp_uniq // !inE.
+rewrite msuppX inE (perm_mem (msupp_rem _ _)) mem_rem_uniq ?msupp_uniq // !inE.
 have [/Lp2|] := boolP (m1 \in msupp q2); first by rewrite ltNge ltW.
 by move: Lm1; rewrite andbF lt_neqAle eq_sym => /andP[/negPf->].
 Qed.
@@ -438,19 +438,19 @@ Local Notation "p < q" := (plt p q).
 Lemma plt_scalerl : forall a p q, a != 0 -> (a *: p < q) = (p < q).
 Proof.
 move=> a p q Za; apply/pltP/pltP=> [] [m [Im NIm H]]; exists m; split=>//.
-- by rewrite -(perm_eq_mem (msuppZ _ Za)).
-- by move=> m1 /H; rewrite (perm_eq_mem (msuppZ _ Za)).
-- by rewrite (perm_eq_mem (msuppZ _ Za)).
-by move=> m1 /H; rewrite (perm_eq_mem (msuppZ _ Za)).
+- by rewrite -(perm_mem (msuppZ _ Za)).
+- by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
+- by rewrite (perm_mem (msuppZ _ Za)).
+by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
 Qed.
 
 Lemma plt_scalerr : forall a p q, a != 0 -> (p < a *: q) = (p < q).
 Proof.
 move=> a p q Za; apply/pltP/pltP=> [] [m [Im NIm H]]; exists m; split=>//.
-- by rewrite -(perm_eq_mem (msuppZ _ Za)).
-- by move=> m1 /H; rewrite (perm_eq_mem (msuppZ _ Za)).
-- by rewrite (perm_eq_mem (msuppZ _ Za)).
-by move=> m1 /H; rewrite (perm_eq_mem (msuppZ _ Za)).
+- by rewrite -(perm_mem (msuppZ _ Za)).
+- by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
+- by rewrite (perm_mem (msuppZ _ Za)).
+by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
 Qed.
 
 End OrderIDomain.

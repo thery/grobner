@@ -1491,7 +1491,7 @@ Lemma mbuch_grobner (b c : seq {mpoly R[n]}) :
     same_ideal b (mbuch b c) /\ spoly_red (mbuch b c).
 Proof.
 apply mbuch_ind=> 
-   [{b c}b H _|{b c}b p c p1 c1 E IH HS HI|b1 p c1 Em IH1 IH2 IH3].
+   [{c}b H _|{c}b p c p1 c1 E IH HS HI|b1 p c1 Em IH1 IH2 IH3].
 - by split=> // p q Ip Iq; apply: H.
 - rewrite mbuchE /= (negPf E) /= -/p1 -/c1.
   case: IH => [p2 q2|p2|HS1 GB].

@@ -1,3 +1,5 @@
+-arg -w -arg -notation-overridden
+-arg -w -arg -ambiguous-paths
 grobner.v
 
 -I .

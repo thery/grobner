@@ -32,7 +32,7 @@ Open Scope ring_scope.
 (*  mconfluent L  : the reduction defined for L is confluent                  *)
 (*  spoly p q     : the S-polynomial of p and q                               *)
 (*  spoly_red L   : all the spolynomials of L reduces to 0                    *)
-(*  splt L L'     : the sequence of polynomial L' is smaller than L iff       *) 
+(*  splt L L'     : the sequence of polynomial L' is smaller than L iff       *)
 (*                  L'is p :: L where p cannot be reduced by L                *)
 (*  mbuch_all L   : complete the sequence L to build a Grobner basis using    *)
 (*                  Buchberger's algorithm                                    *)
@@ -302,7 +302,8 @@ left; exists p1; exists p2; split=> //.
       rewrite mem_filter ?LL.
       suff F : (m < m1)%O by rewrite F Lm.
       by have := mlast_lemc LL; rewrite le_eqVlt eq_sym (negPf Dm) Eq.
-    by rewrite msuppMCX // -mcoeff_msupp Lm // lt_neqAle -Eq eq_sym Dm mlast_lemc.
+    by rewrite msuppMCX // -mcoeff_msupp Lm // 
+               lt_neqAle -Eq eq_sym Dm mlast_lemc.
   - by apply: msupp_uniq.
   rewrite !msuppMCX -?mcoeff_msupp // !inE.
   by case: (boolP (_ == m2)) => // /eqP->; rewrite (negPf Dm2m3).
@@ -410,13 +411,15 @@ have F4 : (p1 + q2)@_(mlast q2) = q2@_(mlast q2).
 apply: Acc_intro => q3.
 apply: (IH _ F2)=> [|q4]; first by rewrite F3 eqxx.
 rewrite F3 F4 -addrA.
-suff: Acc (fun p q0 : mpoly n R => p < q0) (p1 + (q2 - q2@_(mlast q2) *: 'X_[(mlast q2)]) ).
+suff: Acc (fun p q0 : mpoly n R => p < q0) 
+          (p1 + (q2 - q2@_(mlast q2) *: 'X_[(mlast q2)]) ).
 case=> JJ; apply: JJ.
 apply: IH1.
 apply/pltP; exists (mlast q); split=> //=.
 - by rewrite msuppX inE eqxx.
 - rewrite (perm_mem (msupp_rem _ _)) mem_rem_uniq ?msupp_uniq // !inE negb_and.
-  by rewrite mcoeff_msupp !negbK  mcoeff_gt_mlead ?eqxx ?orbT // Lp2 // mlead_supp.
+  by rewrite mcoeff_msupp !negbK  mcoeff_gt_mlead ?eqxx ?orbT // 
+             Lp2 // mlead_supp.
 move=> m1 Lm1.
 rewrite msuppX inE (perm_mem (msupp_rem _ _)) mem_rem_uniq ?msupp_uniq // !inE.
 have [/Lp2|] := boolP (m1 \in msupp q2); first by rewrite ltNge ltW.
@@ -1043,7 +1046,7 @@ case/mreduceP : R2p => m2 [r2 [Im2 Ir2 Zr2 Lr2 ->]].
 wlog: m1 m2 r1 r2 Im1 Zr1 Lr1 Ir1 Im2 Zr2 Lr2 Ir2 / (m2 <= m1)%O => [HW|Lm2].
   have [Lo|Lo] := boolP (m2 <= m1)%O; first by apply: HW.
   case: (HW m2 m1 r2 r1 Im2 Zr2 Lr2 Ir2 Im1 Zr1 Lr1 Ir1) => //.
-    by rewrite leNgt ?lt_neqAle ?negb_and ?Lo 1?orbC //.
+    by rewrite leNgt lt_neqAle negb_and Lo orbT.
   by move=> p3 H1 H2; exists p3.
 have [/eqP Em1|Em1] := boolP (m1 == mlead p); 
        have [/eqP Em2|Em2] := boolP (m2 == mlead p).
@@ -1407,7 +1410,8 @@ Definition pbuch pr f :=
 
 Definition mbuch b c := Fix wf_psplt _ pbuch (b, c).
 
-Lemma pbuch_ext pr f g : (forall pr1 (H : psplt pr1 pr), f pr1 H = g pr1 H) -> pbuch f = pbuch g.
+Lemma pbuch_ext pr f g : 
+  (forall pr1 (H : psplt pr1 pr), f pr1 H = g pr1 H) -> pbuch f = pbuch g.
 Proof.
 rewrite /pbuch /=.
 move: pr f g; case=> l [|p r] f g H //=.
@@ -1445,7 +1449,8 @@ Lemma mbuch_ind P :
   (forall b, P b [::] b) -> 
  (forall b p c, let p1 := mreduceplusf b p in
                  let c1 := [seq (spoly p1 q) | q <- b] ++ c in
-    p1 != 0 -> P (p1 :: b) c1 (mbuch (p1 :: b) c1) -> P b (p :: c) (mbuch b (p :: c))) ->
+    p1 != 0 -> P (p1 :: b) c1 (mbuch (p1 :: b) c1) -> 
+    P b (p :: c) (mbuch b (p :: c))) ->
   (forall b p c,  mreduceplusf b p == 0 -> 
                    P b c (mbuch b c) -> P b (p :: c) (mbuch b (p :: c))) ->
   (forall b c, P b c (mbuch b c)).
@@ -1470,7 +1475,8 @@ by apply: mlead_supp.
 Qed.
 
 (* Two sequences define the same ideal *)
-Definition same_ideal l1 l2 := (forall p : {mpoly R[n]}, ideal l1 p <-> ideal l2 p).
+Definition same_ideal l1 l2 := 
+  (forall p : {mpoly R[n]}, ideal l1 p <-> ideal l2 p).
 
 Lemma same_ideal_id l : same_ideal l l.
 Proof. by []. Qed.
@@ -1478,9 +1484,11 @@ Proof. by []. Qed.
 Lemma same_ideal_sym l1 l2 : same_ideal l1 l2 -> same_ideal l2 l1.
 Proof. by move=> H p; split; case: (H p). Qed.
 
-Lemma same_ideal_trans l1 l2 l3 : same_ideal l1 l3 -> same_ideal l3 l2 -> same_ideal l1 l2.
+Lemma same_ideal_trans l1 l2 l3 :
+  same_ideal l1 l3 -> same_ideal l3 l2 -> same_ideal l1 l2.
 Proof. 
-by (move=> H1 H2 p; split; case: (H1 p); case: (H2 p) => P1 P2 P3 P4)=> [/P3|/P2].
+move=> H1 H2 p.
+by (split; case: (H1 p); case: (H2 p) => P1 P2 P3 P4)=> [/P3|/P2].
 Qed.
 
 Lemma mbuch_grobner (b c : seq {mpoly R[n]}) :
@@ -1557,7 +1565,8 @@ Qed.
 
 Definition mbuch_all l := mbuch l [seq spoly i j | i <- l, j <- l].
 
-Lemma mbuch_all_grobner l : same_ideal l (mbuch_all l) /\ spoly_red (mbuch_all l).
+Lemma mbuch_all_grobner l :
+  same_ideal l (mbuch_all l) /\ spoly_red (mbuch_all l).
 Proof.
 apply: mbuch_grobner=> [p q Ip Iq /negP[]|p /allpairsP[[p1 q1 [/=Ip1 Iq2 ->]]]].
   by apply/allpairsP; exists (p,q).

@@ -41,7 +41,12 @@ Open Scope ring_scope.
 (******************************************************************************)
 (******************************************************************************)
 
+(*
 Import Order.Def Order.Syntax Order.Theory.
+*)
+
+Import Order.TotalTheory Order.POrderTheory Order.BDistrLatticeTheory.
+Import Order.ConverseDistrLattice Order.DistrLatticeTheoryJoin.
 
 Section Grobner.
 

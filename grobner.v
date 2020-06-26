@@ -41,8 +41,7 @@ Open Scope ring_scope.
 (******************************************************************************)
 (******************************************************************************)
 
-Import Order.TotalTheory Order.POrderTheory Order.BDistrLatticeTheory.
-Import Order.ConverseDistrLattice Order.DistrLatticeTheoryJoin.
+Import Order.TTheory.
 
 Section Grobner.
 
@@ -332,12 +331,12 @@ Lemma mlast_ind P :
   -> (forall p, P p).
 Proof.
 move=> HP IH p.
-elim: {p}(size (msupp p)) {-2}p (eqxx (size (msupp p)))=> [p Ls| n1 IH1 p ES].
+have [k sEk] : {k | size (msupp p) = k} by eexists; apply: refl_equal.
+elim: k p sEk => [p Ls| n1 IH1 p ES].
   suff /eqP->: p == 0 by [].
   by rewrite -msupp_eq0; case: msupp Ls.
 apply/IH/IH1.
-rewrite (perm_size (msupp_rem _ _)) size_rem ?(eqP H) //.
-  by rewrite (eqP ES).
+rewrite (perm_size (msupp_rem _ _)) size_rem ?(eqP H) ?ES//.
 by apply/mlast_supp; rewrite -msupp_eq0; case: msupp ES.
 Qed.
   
@@ -534,7 +533,7 @@ Proof.
 move=> Im Lq.
 apply: le_trans (mleadB_le _ _) _.
 have [/eqP->|Zlp] := boolP (p@_m / mleadc q == 0).
-  by rewrite scale0r mul0r mlead0 [max _ _]joinx0 le_refl.
+  by rewrite scale0r mul0r mlead0 /= joinx0.
 rewrite leEjoin joinAC joinxx joinC -leEjoin.
 rewrite -scalerAl mleadZ //.
 apply: le_trans (mleadM_le _ _) _.
@@ -977,8 +976,9 @@ Definition mconfluent :=
 Lemma mconfluent_grobner: mconfluent -> grobner.
 Proof.
 move=> HC p [t ->].
-have : {subset L <= L}  by [].
-elim: {-3}L t => /= [t _ |r L1 IH t HS].
+suff F L1 (t1 : (size L1).-tuple _) :
+  {subset L1 <= L} -> \sum_(i < size L1) t1`_i * L1`_i ->_+ 0 by apply: F.
+elim: L1 {t}t1 => /= [t _ |r L1 IH t HS].
   by rewrite big_ord0 mreduceplus_ref.
 rewrite big_ord_recl.
 set q := \sum_(_ < _) _.
@@ -1236,6 +1236,7 @@ Lemma bar_r_ins A (R : rel A) l1 l2 l3 :
   bar_r R (l1 ++ l3) -> bar_r R (l1 ++ l2 ++ l3).
 Proof.
 move=> H.
+
 elim : H {-1}l1 l2 {-1}l3 (refl_equal (l1 ++ l3))
        => {l1 l3}//= [l H l1 l2 l3 lE|l IH H l1 l2 l3 lE]. 
   by apply/bar_0/has_r_ins; rewrite -lE.
@@ -1294,7 +1295,7 @@ have: min [rel a b | a.1 < b.1] prod [::] by [].
 pose l1 := [seq x.2 | x <- ([::] : seq (A * B))].
 have H1 : bar_r R l1 by [].
 have := (refl_equal l1); rewrite {2}/l1.
-elim: {l1}H1 {1 2 3}[::] => //= [|l H1 H2 l2 H3 H4].
+elim: {l1}H1 [::] => //= [|l H1 H2 l2 H3 H4].
   elim => //= a l IH Ho [|b l1] //= [J1 J2] [Hmin Hbar].
   have /orP[H | H] := Ho.
     move: H Hmin; rewrite J1 {J1 a l Ho IH Hbar}J2.

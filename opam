@@ -15,8 +15,8 @@ install: [
 remove: [make "uninstall"]
 depends: [
   "coq" {(>= "8.11")}
-  "coq-mathcomp-ssreflect" { (>= "1.10") }
-  "coq-mathcomp-algebra"   { (>= "1.10") }
+  "coq-mathcomp-ssreflect" { (>= "1.11") }
+  "coq-mathcomp-algebra"   { (>= "1.11") }
   "coq-mathcomp-multinomials" {(>= "1.5")}
 ]
 tags: [

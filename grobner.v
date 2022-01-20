@@ -1236,7 +1236,6 @@ Lemma bar_r_ins A (R : rel A) l1 l2 l3 :
   bar_r R (l1 ++ l3) -> bar_r R (l1 ++ l2 ++ l3).
 Proof.
 move=> H.
-
 elim : H {-1}l1 l2 {-1}l3 (refl_equal (l1 ++ l3))
        => {l1 l3}//= [l H l1 l2 l3 lE|l IH H l1 l2 l3 lE]. 
   by apply/bar_0/has_r_ins; rewrite -lE.

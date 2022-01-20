@@ -1,0 +1,62 @@
+# This file was generated from `meta.yml`, please do not edit manually.
+# Follow the instructions on https://github.com/coq-community/templates to regenerate.
+
+opam-version: "2.0"
+maintainer: "thery@sophia.inria.fr"
+version: "dev"
+
+homepage: "https://github.com/thery/grobner"
+dev-repo: "git+https://github.com/thery/grobner.git"
+bug-reports: "https://github.com/thery/grobner/issues"
+license: "MIT"
+
+synopsis: "Grobner basis"
+description: """
+A fornalisation of Grobner basis in ssreflect.
+It contains one file
+
+``grobner.v``
+
+It defines
+
+```coq
+From mathcomp Require Import all_ssreflect all_algebra.
+From SsrMultinomials Require Import ssrcomplements freeg mpoly.
+From mathcomp.contrib.grobner Require Import grobner.
+
+Print ideal.
+
+(*
+ideal =
+fun (R : ringType) (n : nat) (L : seq {mpoly R[n]}) (p : {mpoly R[n]})
+  =>
+  exists t, p = \sum_(i < size L) t`_i * L`_i
+*)
+
+(* it is decidable *)
+
+Check idealfP.
+(*
+idealfP
+     : forall (R : fieldType)  (n : nat) (p : {mpoly R[n]})
+              (l : seq {mpoly R[n]}),
+       reflect (ideal l p) (idealf l p)
+*)
+```"""
+
+build: [make "-j%{jobs}%"]
+install: [make "install"]
+depends: [
+  "coq" {(>= "8.15")}
+  "coq-mathcomp-ssreflect" {(>= "1.14.0")}
+  "coq-mathcomp-algebra" {(>= "1.14.0")}
+  "coq-mathcomp-multinomials" {(>= "4.5.0")}
+]
+
+tags: [
+  "keyword:grobner basis"
+  "logpath:grobner"
+]
+authors: [
+  "Laurent Théry"
+]

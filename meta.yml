@@ -1,0 +1,86 @@
+---
+fullname: Grobner
+shortname: grobner
+organization: thery
+community: false
+dune: false
+action: true
+
+synopsis: Grobner basis
+
+description: |-
+  A fornalisation of Grobner basis in ssreflect.
+  It contains one file
+
+  ``grobner.v``
+
+  It defines
+
+  ```coq
+  From mathcomp Require Import all_ssreflect all_algebra.
+  From SsrMultinomials Require Import ssrcomplements freeg mpoly.
+  From mathcomp.contrib.grobner Require Import grobner.
+
+  Print ideal.
+
+  (*
+  ideal =
+  fun (R : ringType) (n : nat) (L : seq {mpoly R[n]}) (p : {mpoly R[n]})
+    =>
+    exists t, p = \sum_(i < size L) t`_i * L`_i
+  *)
+
+  (* it is decidable *)
+
+  Check idealfP.
+  (*
+  idealfP
+       : forall (R : fieldType)  (n : nat) (p : {mpoly R[n]})
+                (l : seq {mpoly R[n]}),
+         reflect (ideal l p) (idealf l p)
+  *)
+  ```
+authors:
+- name: Laurent Théry
+
+maintainers:
+- name: Laurent Théry
+  nickname: thery
+
+opam-file-maintainer: thery@sophia.inria.fr
+
+license:
+  fullname: MIT License
+  identifier: MIT
+
+supported_coq_versions:
+  text: '8.15 or later'
+  opam: '{(>= "8.15")}'
+
+dependencies:
+- opam:
+    name: coq-mathcomp-ssreflect
+    version: '{(>= "1.14.0")}'
+  description: |-
+    [MathComp ssreflect 1.14 or later](https://math-comp.github.io)
+- opam:
+    name: coq-mathcomp-algebra
+    version: '{(>= "1.14.0")}'
+  description: |-
+    [MathComp algebra 1.14 or later](https://math-comp.github.io)
+- opam:
+    name: coq-mathcomp-multinomials
+    version: '{(>= "4.5.0")}'
+  description: |-
+    [MathComp Multinomials 4.5 or later](https://math-comp.github.io)https://github.com/math-comp/multinomials
+
+tested_coq_opam_versions:
+- version: '1.14.0-coq-8.15'
+  repo: 'mathcomp/mathcomp'
+
+namespace: grobner
+
+keywords:
+- name: grobner basis
+
+---

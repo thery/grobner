@@ -70,9 +70,9 @@ dependencies:
     [MathComp algebra 1.14 or later](https://math-comp.github.io)
 - opam:
     name: coq-mathcomp-multinomials
-    version: '{(>= "4.5.0")}'
+    version: '{(>= "1.5.5")}'
   description: |-
-    [MathComp Multinomials 4.5 or later](https://math-comp.github.io)https://github.com/math-comp/multinomials
+    [MathComp Multinomials 1.5.5 or later](https://math-comp.github.io)https://github.com/math-comp/multinomials
 
 tested_coq_opam_versions:
 - version: '1.14.0-coq-8.15'

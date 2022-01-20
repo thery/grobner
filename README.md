@@ -53,7 +53,7 @@ idealfP
 - Additional dependencies:
   - [MathComp ssreflect 1.14 or later](https://math-comp.github.io)
   - [MathComp algebra 1.14 or later](https://math-comp.github.io)
-  - [MathComp Multinomials 4.5 or later](https://math-comp.github.io)https://github.com/math-comp/multinomials
+  - [MathComp Multinomials 1.5.5 or later](https://math-comp.github.io)https://github.com/math-comp/multinomials
 - Coq namespace: `grobner`
 - Related publication(s): none
 

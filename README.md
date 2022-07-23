@@ -30,7 +30,7 @@ Print ideal.
 ideal =
 fun (R : ringType) (n : nat) (L : seq {mpoly R[n]}) (p : {mpoly R[n]})
   =>
-  exists t, p = \sum_(i < size L) t`_i * L`_i
+  exists t, p = sum_(i < size L) t`_i * L`_i
 *)
 
 (* it is decidable *)
@@ -58,6 +58,7 @@ idealfP
 - Related publication(s): none
 
 ## Building and installation instructions
+
 ``` shell
 git clone https://github.com/thery/grobner.git
 cd grobner

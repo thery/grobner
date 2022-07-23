@@ -58,7 +58,6 @@ idealfP
 - Related publication(s): none
 
 ## Building and installation instructions
-
 ``` shell
 git clone https://github.com/thery/grobner.git
 cd grobner

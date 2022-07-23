@@ -30,7 +30,7 @@ Print ideal.
 ideal =
 fun (R : ringType) (n : nat) (L : seq {mpoly R[n]}) (p : {mpoly R[n]})
   =>
-  exists t, p = sum_(i < size L) t`_i * L`_i
+  exists t, p = \sum_(i < size L) t`_i * L`_i
 *)
 
 (* it is decidable *)
@@ -48,8 +48,8 @@ build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
   "coq" {(>= "8.15")}
-  "coq-mathcomp-ssreflect" {(>= "1.14.0")}
-  "coq-mathcomp-algebra" {(>= "1.14.0")}
+  "coq-mathcomp-ssreflect" {(>= "1.15.0")}
+  "coq-mathcomp-algebra" {(>= "1.15.0")}
   "coq-mathcomp-multinomials" {(>= "1.5.5")}
 ]
 

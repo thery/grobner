@@ -124,14 +124,14 @@ Qed.
 End Ideal.
 
 Lemma ideal_consr (R : ringType) n l (p q : {mpoly R[n]}) :
-   ideal l p -> ideal (q::l) p.
+  ideal l p -> ideal (q::l) p.
 Proof.
 case=> t ->; exists [tuple of 0 :: t] => /=.
 by rewrite big_ord_recl /= mul0r add0r.
 Qed.
 
 Lemma ideal_consl (R : ringType) n l (p q : {mpoly R[n]}) :
-  ideal l p -> ideal (p :: l) q -> ideal l q.
+  ideal l p -> ideal (p::l) q -> ideal l q.
 Proof.
 case=> [t1] ->; case=> /= t2 ->.
 exists [tuple (t2`_0 * t1`_i + t2`_(fintype.lift ord0 i))| i < size l].
@@ -165,10 +165,10 @@ Definition plt p q : bool :=
 Local Notation "a < b" := (plt a b).
 
 Lemma pltP p q :
-   reflect (exists m,
-              [/\ m \in msupp q, m \notin msupp p &
-               forall m1, (m < m1)%O -> (m1 \in msupp p) = (m1 \in msupp q)])
-           (p < q).
+  reflect (exists m,
+             [/\ m \in msupp q, m \notin msupp p &
+              forall m1, (m < m1)%O -> (m1 \in msupp p) = (m1 \in msupp q)])
+          (p < q).
 Proof.
 apply: (iffP hasP)=> [[m Im /and3P[NIm /allP /=Hq /allP Hp]]|[m [Im NIm HA]]].
 - exists m; split=> // m1 Lm.
@@ -228,9 +228,9 @@ by rewrite !mcoeff_msupp !mcoeff_gt_mlead // (lt_trans _ Lm).
 Qed.
 
 Lemma plt_leadE (p q : {mpoly R[n]}) : p != 0 -> (p < q) ->
-   (mlead p < mlead q)%O ||
-   ((mlead p == mlead q) &&
-      (p - p@_(mlead q) *: 'X_[mlead q] < q - q@_(mlead q) *: 'X_[mlead q])).
+  (mlead p < mlead q)%O ||
+  ((mlead p == mlead q) &&
+     (p - p@_(mlead q) *: 'X_[mlead q] < q - q@_(mlead q) *: 'X_[mlead q])).
 Proof.
 have [/eqP->|Zq] := boolP (q == 0); first by rewrite plt0r.
 move=> Zp Lp.
@@ -266,7 +266,7 @@ Lemma plt_mlast p q :
 Proof.
 (* Why this proof is so long? *)
 have [/eqP->|Zq] := boolP (q == 0); first by rewrite plt0r.
-move=> /pltP[m [Im NIm Lm]].
+case/pltP=> m [Im NIm Lm].
 have [/eqP Eq|Dq] := boolP (mlast q == m); last first.
 - right; apply/pltP; exists m; split=> [||m3 Im3]//.
   - rewrite (perm_mem (msupp_rem _ _)) rem_filter ?msupp_uniq //.
@@ -437,18 +437,18 @@ Implicit Types m : 'X_{1..n}.
 
 Local Notation "p < q" := (plt p q).
 
-Lemma plt_scalerl : forall a p q, a != 0 -> (a *: p < q) = (p < q).
+Lemma plt_scalerl a p q : a != 0 -> (a *: p < q) = (p < q).
 Proof.
-move=> a p q Za; apply/pltP/pltP=> [] [m [Im NIm H]]; exists m; split=>//.
+move=> Za; apply/pltP/pltP=> [] [m [Im NIm H]]; exists m; split=>//.
 - by rewrite -(perm_mem (msuppZ _ Za)).
 - by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
 - by rewrite (perm_mem (msuppZ _ Za)).
 by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
 Qed.
 
-Lemma plt_scalerr : forall a p q, a != 0 -> (p < a *: q) = (p < q).
+Lemma plt_scalerr a p q : a != 0 -> (p < a *: q) = (p < q).
 Proof.
-move=> a p q Za; apply/pltP/pltP=> [] [m [Im NIm H]]; exists m; split=>//.
+move=> Za; apply/pltP/pltP=> [] [m [Im NIm H]]; exists m; split=>//.
 - by rewrite -(perm_mem (msuppZ _ Za)).
 - by move=> m1 /H; rewrite (perm_mem (msuppZ _ Za)).
 - by rewrite (perm_mem (msuppZ _ Za)).
@@ -476,7 +476,8 @@ Definition mdiv m p q : {mpoly R[n]} :=
   p - (p@_m/ mleadc q) *: 'X_[m - mlead q] * q.
 
 Lemma mdiv_not_supp m p q :
- q != 0 -> (mlead q <= m)%MM -> m \notin msupp (mdiv m p q).
+  q != 0 -> (mlead q <= m)%MM ->
+  m \notin msupp (mdiv m p q).
 Proof.
 move=> Zq Lq; rewrite mcoeff_msupp negbK mcoeffB -scalerAl mcoeffZ.
 by rewrite -{3}(submK Lq) [_ * q]mulrC mcoeffMX divfK ?mleadc_eq0 // subrr.
@@ -557,6 +558,7 @@ Definition mreduce_lock p q : bool :=
 
 Definition mreduce : rel {mpoly R[n]} :=
   locked_with red_key mreduce_lock.
+Canonical mreduce_unlockable := [unlockable fun mreduce].
 
 Notation "a ->_1 b " := (mreduce a b) (at level 52).
 
@@ -566,7 +568,7 @@ Lemma mreduceP p q :
                 q = mdiv m p r])
           (p ->_1 q).
 Proof.
-rewrite [mreduce]unlock.
+rewrite unlock.
 apply: (iffP hasP)=> [[m Im /hasP[r Ir /and3P[Zr Lm /eqP->]]]|
                       [m [r [Im Ir Zr Lm ->]]]].
 - by exists m, r.
@@ -582,19 +584,17 @@ Qed.
 
 Lemma mreduce_lt p q : p ->_1 q -> q < p.
 Proof.
-move=>/mreduceP[m [r [Im Ir Zr Lm ->]]].
+case/mreduceP=> m [r [Im Ir Zr Lm ->]].
 apply/pltP; exists m; split=> [||m1 Lm1] //.
 - by rewrite mcoeff_msupp negbK mdiv_coef_id.
 by rewrite !mcoeff_msupp mdiv_coef_more.
 Qed.
 
 Lemma mreduce_lead p q : p ->_1 q -> (mlead q <= mlead p)%O.
-Proof. by move=> /mreduceP[m [r [Im Ir H1 H2 ->]]]; apply:  mdiv_lead. Qed.
+Proof. by case/mreduceP=> m [r [Im Ir H1 H2 ->]]; apply: mdiv_lead. Qed.
 
 Lemma mreduce_neq0 p q : p ->_1 q -> p != 0.
-Proof.
-by rewrite  [mreduce]unlock /mreduce_lock -msupp_eq0 /=; case: (msupp p).
-Qed.
+Proof. by rewrite unlock -msupp_eq0 /=; case: (msupp p). Qed.
 
 Lemma mreduce_scale a p q : a != 0 -> p ->_1 q -> a *: p ->_1 a *: q.
 Proof.
@@ -606,14 +606,15 @@ Qed.
 
 Lemma mreduceXm m p q : p ->_1 q -> 'X_[m] * p ->_1 'X_[m] * q.
 Proof.
-move=> /mreduceP[m1 [r [Im1 Ir Zr Lr ->]]].
+case/mreduceP=> m1 [r [Im1 Ir Zr Lr ->]].
 apply/mreduceP; exists (m + m1)%MM, r; split=>//; last by rewrite mdivX.
 - by rewrite mcoeff_msupp [_ * p]mulrC mcoeffMX -mcoeff_msupp.
 by rewrite (lepm_trans Lr) // lem_addl.
 Qed.
 
-Lemma mreduce_compatX a m p q : (mlead p < m)%O ->
-    p ->_1 q -> (a *: 'X_[m]) + p ->_1 (a *: 'X_[m]) + q.
+Lemma mreduce_compatX a m p q :
+  (mlead p < m)%O -> p ->_1 q ->
+  (a *: 'X_[m]) + p ->_1 (a *: 'X_[m]) + q.
 Proof.
 move=> Lp /mreduceP[m1 [r [Im1 Ir Zr Lr ->]]].
 have Dmm1 : m != m1.
@@ -627,7 +628,7 @@ Qed.
 
 Lemma ideal_reduce p q : p ->_1 q -> (ideal L p <-> ideal L q).
 Proof.
-move=> /mreduceP[m [r [Im Ir Zr Lr ->]]].
+case/mreduceP=> m [r [Im Ir Zr Lr ->]].
 rewrite /mdiv; split => H.
 - by apply: idealB =>//; apply/idealM/ideal_mem.
 rewrite -[p](subrK ((p@_m / mleadc r) *: 'X_[(m - mlead r)] * r)).
@@ -646,10 +647,11 @@ Definition mreducef p : option {mpoly R[n]} :=
 Definition irreducible_lock p : bool := ~~ mreducef p.
 Definition irreducible : pred {mpoly R[n]} :=
   locked_with red_key irreducible_lock.
+Canonical irreducible_unlockable := [unlockable fun irreducible].
 
 Lemma irreducibleP p : reflect (forall q, ~ p ->_1 q) (irreducible p).
 Proof.
-rewrite /irreducible unlock /irreducible_lock /mreducef.
+rewrite [irreducible]unlock /mreducef.
 set L1 := [seq _ | _ <- _, _ <- _].
 apply: (iffP idP)=> [H1 q /mreduceP[m [r [Im Ir Zr Lr Er]]]|H1].
 - suff /(nth_find None) : has isSome L1 by apply: negP.
@@ -660,19 +662,19 @@ have : ~~ has isSome L1.
 - apply/hasPn => /= [[q|] // /allpairsP[[/= m r [Im Ir]]]].
   case: ifP=>// /andP[Zr Lr][Er].
   by case: (H1 q); apply/mreduceP; exists m, r.
-by rewrite has_find -leqNgt => /(nth_default None) ->.
+by rewrite has_find -leqNgt => /(nth_default None)->.
 Qed.
 
 Lemma irreducible0 : irreducible 0.
 Proof. by apply/irreducibleP => m /mreduce_lt; rewrite plt0r. Qed.
 
 Lemma mreducefE p :
-   if mreducef p is Some q then p ->_1 q else irreducible p.
+  if mreducef p is Some q then p ->_1 q else irreducible p.
 Proof.
-rewrite /irreducible unlock /irreducible_lock /mreducef /mreduce /=.
+rewrite [irreducible]unlock /mreducef.
 set L1 := [seq _ | _ <- _, _ <- _].
-have [H|H] := boolP (has isSome L1); last first.
-- by move: H; rewrite has_find -leqNgt=> /(nth_default None)->.
+have [H|] := boolP (has isSome L1); last first.
+- by rewrite has_find -leqNgt=> /(nth_default None)->.
 case E: nth (nth_find None H) => [a|] // _.
 move: H; rewrite has_find => /(mem_nth None); rewrite E.
 move/allpairsP=> [/=[m r]/= [Im Ir]].
@@ -686,18 +688,20 @@ Qed.
 (******************************************************************************)
 
 Definition mr q p f : bool :=
-   (p == q) ||
-    let g y :=
-       (if y < p as b return ((b -> _) -> _)
-        then fun f => f is_true_true
-        else fun f => false) (f y) in
-    has (fun m =>
-            has (fun r =>
-                    [&& r != 0, (mlead r <= m)%MM & g (mdiv m p r)])
-                 L)
-        (msupp p).
+  (p == q) ||
+   let g y :=
+      (if y < p as b return ((b -> _) -> _)
+       then fun f => f is_true_true
+       else fun f => false) (f y) in
+   has (fun m =>
+           has (fun r =>
+                   [&& r != 0, (mlead r <= m)%MM & g (mdiv m p r)])
+                L)
+       (msupp p).
 
-Lemma mr_ext p q f g : (forall r (H : r < p), f r H = g r H) -> mr q f = mr q g.
+Lemma mr_ext p q f g :
+  (forall r (H : r < p), f r H = g r H) ->
+  mr q f = mr q g.
 Proof.
 rewrite /mr => HH; case: (_ == _) => //=.
 elim: L => //= a l IH.
@@ -725,7 +729,7 @@ apply: (iffP hasP) => [/= [m Im]|].
   by apply/mreduceP; exists m, r.
 case => [/eqP| [r /mreduceP[m [r1 [Im Ir1 Zr1 Lr1 ->]]] HH]].
 - by rewrite (negPf E1).
-exists m => //; apply/hasP; exists r1 =>//=.
+exists m =>//; apply/hasP; exists r1 =>//=.
 rewrite Zr1 Lr1 mreduce_lt //.
 by apply/mreduceP; exists m, r1.
 Qed.
@@ -745,11 +749,11 @@ move=> q p r H1 H2.
 move: p H1; apply: (well_founded_induction (@plt_wf R n)) =>
                 p IH /mreduceplusP[->//|[r1 H1r1 H2r1]].
 apply/mreduceplusP; right; exists r1 =>//.
-apply: IH => //.
+apply: IH =>//.
 by apply: mreduce_lt.
 Qed.
 
-Lemma mreduceplus_scale a p q :  p ->_+ q -> a *: p ->_+ a *: q.
+Lemma mreduceplus_scale a p q : p ->_+ q -> a *: p ->_+ a *: q.
 Proof.
 have [/eqP->_|Za] := boolP (a == 0).
 - by rewrite !scale0r mreduceplus_ref.
@@ -761,7 +765,7 @@ move=> Ra /IH R1a; apply/mreduceplusP; right; exists (a *: r1).
 by apply: R1a;  apply: mreduce_lt.
 Qed.
 
-Lemma mreduceplusXm m p q :  p ->_+ q -> 'X_[m] * p ->_+ 'X_[m] * q.
+Lemma mreduceplusXm m p q : p ->_+ q -> 'X_[m] * p ->_+ 'X_[m] * q.
 Proof.
 move: p q; apply: (well_founded_induction (@plt_wf R n))
                  => p IH q /mreduceplusP[<-|[r1]].
@@ -772,8 +776,9 @@ apply: R1a.
 by apply: mreduce_lt.
 Qed.
 
-Lemma mreduceplus_compatX a m p q : (mlead p < m)%O ->
-    p ->_+ q -> (a *: 'X_[m]) + p ->_+ (a *: 'X_[m]) + q.
+Lemma mreduceplus_compatX a m p q :
+  (mlead p < m)%O -> p ->_+ q ->
+  (a *: 'X_[m]) + p ->_+ (a *: 'X_[m]) + q.
 Proof.
 move: p q; apply: (well_founded_induction (@plt_wf R n)) => p IH q Lm.
 case/mreduceplusP=> [<-|[r Rp Rr]].
@@ -826,22 +831,23 @@ split=> H5; first by apply/H3/(ideal_reduce H1).
 by apply/(ideal_reduce H1)/H4.
 Qed.
 
-Lemma ideal_reduceplus_0  p : p ->_+ 0 -> ideal L p.
+Lemma ideal_reduceplus_0 p : p ->_+ 0 -> ideal L p.
 Proof. by case/ideal_reduceplus => _ /(_ (ideal0 _)). Qed.
 
 Lemma reduceB_distr p q r :
-  p - q ->_1 r -> exists p1, exists q1,
-      [/\ p ->_+ p1 , q ->_+ q1 & r = p1 - q1].
+  p - q ->_1 r ->
+  exists p1 q1,
+    [/\ p ->_+ p1, q ->_+ q1 & r = p1 - q1].
 Proof.
-move=> /mreduceP[m [r1 [Im Ir1 Zr1 Lr1 ->]]].
+case/mreduceP=> m [r1 [Im Ir1 Zr1 Lr1 ->]].
 have Zmr1 : mleadc r1 != 0.
 - by move: Zr1; rewrite mleadc_eq0 /mdiv; case: (_ == _).
 exists (if m \in msupp p then mdiv m p r1 else p).
 exists (if m \in msupp q then mdiv m q r1 else q); split.
 - case: (boolP (_ \in _)) => Imp; last by apply: mreduceplus_ref.
-  by apply/mreduceplusW; apply/mreduceP; exists m; exists r1.
+  by apply/mreduceplusW; apply/mreduceP; exists m, r1.
 - case: (boolP (_ \in _)) => Imq; last by apply: mreduceplus_ref.
-  by apply/mreduceplusW; apply/mreduceP; exists m; exists r1.
+  by apply/mreduceplusW; apply/mreduceP; exists m, r1.
 move/msuppB_le: Im; rewrite /mdiv mem_cat mcoeffB.
 have [H1 _|/memN_msupp_eq0-> //= ->] := boolP (_ \in _); last first.
 - by rewrite sub0r -!scalerAl mulNr scaleNr opprK opprB -!addrA [-_ + _]addrC.
@@ -853,7 +859,7 @@ by rewrite addrC.
 Qed.
 
 Lemma reduceplusB_distr p q :
- p - q ->_+ 0 -> exists2 r, p ->_+ r & q ->_+ r.
+  p - q ->_+ 0 -> exists2 r, p ->_+ r & q ->_+ r.
 Proof.
 move: (p - q) {2 4}p {2 4}q (eqxx (p -q)).
 apply: (well_founded_induction (@plt_wf _ _)) => r1 IH p1 q1 /eqP HH.
@@ -871,7 +877,7 @@ Qed.
 Lemma reduceB_compat p q r :
   p ->_1 q -> exists2 r1, p - r ->_+ r1 & q - r ->_+ r1.
 Proof.
-move=> /mreduceP[m [r1 [Im Ir1 Zr1 Lr1 Er1]]].
+case/mreduceP=> m [r1 [Im Ir1 Zr1 Lr1 Er1]].
 have Zmr1 : mleadc r1 != 0.
 - by move: Zr1; rewrite mleadc_eq0 /mdiv; case: (_ == _).
 have Zqm : q@_m = 0.
@@ -909,13 +915,15 @@ Definition mreducestar p q : bool := (p ->_+ q) && irreducible q.
 Notation " a ->_* b " := (mreducestar a b) (at level 40).
 
 Definition mfr p f : {mpoly R[n]} :=
-   if mreducef p is Some q then
-   (if q < p as b return ((b -> _) -> _)
-       then fun f => f is_true_true
-       else fun f => 0) (f q)
-   else p.
+  if mreducef p is Some q then
+  (if q < p as b return ((b -> _) -> _)
+      then fun f => f is_true_true
+      else fun f => 0) (f q)
+  else p.
 
-Lemma mfr_ext p f g : (forall r (H : r < p), f r H = g r H) -> mfr f = mfr g.
+Lemma mfr_ext p f g :
+  (forall r (H : r < p), f r H = g r H) ->
+  mfr f = mfr g.
 Proof.
 rewrite /mfr => HH; case: mreducef => //= a.
 by case: (_ < _) (f a) (g a) (HH a).
@@ -1004,13 +1012,13 @@ by exact: mreducestarfE.
 Qed.
 
 (******************************************************************************)
-(*        Spolynomials                                                        *)
+(*        S-polynomials                                                       *)
 (******************************************************************************)
 
 Definition spoly p q : {mpoly R[n]} :=
   if p * q == 0 then 0 else
-   let m := mlcm (mlead p) (mlead q) in
-   mdiv m 'X_[m] p - mdiv m 'X_[m] q.
+    let m := mlcm (mlead p) (mlead q) in
+    mdiv m 'X_[m] p - mdiv m 'X_[m] q.
 
 Lemma spolypp p : spoly p p = 0.
 Proof. by rewrite /spoly subrr if_same. Qed.
@@ -1028,7 +1036,8 @@ case: (_ == _); first by exact: ideal0.
 by rewrite mdivB; apply/idealB; apply: idealM.
 Qed.
 
-Definition spoly_red := (forall p q, p \in L -> q \in L -> spoly p q ->_* 0).
+Definition spoly_red : Prop :=
+  forall p q, p \in L -> q \in L -> spoly p q ->_* 0.
 
 Lemma spoly_red_conf: spoly_red -> mconfluent.
 Proof.
@@ -1167,15 +1176,15 @@ Qed.
 End Main.
 
 Lemma mreduce_subset (R: fieldType) n l1 l2 (p q : {mpoly R[n]}) :
- {subset l1 <= l2} -> mreduce l1 p q -> mreduce l2 p q.
+  {subset l1 <= l2} -> mreduce l1 p q -> mreduce l2 p q.
 Proof.
 move=> H /mreduceP[m [r [Im Ir Zr Lm ->]]].
 apply/mreduceP; exists m, r; split => //.
 by apply: H.
 Qed.
 
-Lemma mreduceplus_subset (R: fieldType) n  l1 l2  (p q : {mpoly R[n]}) :
- {subset l1 <= l2} -> mreduceplus l1 p q -> mreduceplus l2 p q.
+Lemma mreduceplus_subset (R: fieldType) n l1 l2 (p q : {mpoly R[n]}) :
+  {subset l1 <= l2} -> mreduceplus l1 p q -> mreduceplus l2 p q.
 Proof.
 move=> H; move: p q; apply: (well_founded_induction (@plt_wf _ _)) => p IH q.
 move/mreduceplusP => [<-|[r H1 H2]]; first by apply: mreduceplus_ref.
@@ -1185,7 +1194,7 @@ apply: mreduce_lt H1.
 Qed.
 
 Lemma mreducestar_subset (R: fieldType) n l1 l2 (p : {mpoly R[n]}) :
- {subset l1 <= l2} -> mreducestar l1 p 0 -> mreducestar l2 p 0.
+  {subset l1 <= l2} -> mreducestar l1 p 0 -> mreducestar l2 p 0.
 Proof.
 move=> H /andP[/(mreduceplus_subset H) H1 _].
 by apply: mreducestar0W.
@@ -1214,7 +1223,8 @@ by rewrite IH // orbT.
 Qed.
 
 Lemma has_r_map A B (R : rel A) (S : rel B) f l :
- (forall a b, R a b -> S (f a) (f b)) -> has_r R l -> has_r S (map f l).
+  (forall a b, R a b -> S (f a) (f b)) ->
+  has_r R l -> has_r S (map f l).
 Proof.
 move=> HRS; elim: l => //= a l IH /orP[|/IH->]; last by rewrite orbT.
 by elim: {IH}l => //= => a1 l IH /orP[Raa1|/IH /orP[]->];
@@ -1246,9 +1256,9 @@ by apply: H (_ : a :: _ = (_ :: _) ++  _); rewrite lE.
 Qed.
 
 Lemma bar_r_map A B (R: rel A) (S: rel B) f :
- (forall a b, R a b -> S (f a) (f b)) ->
- (forall b: B, {a: A | b = f a}) ->
- forall l, bar_r R l -> bar_r S (map f l).
+  (forall a b, R a b -> S (f a) (f b)) ->
+  (forall b: B, {a: A | b = f a}) ->
+  forall l, bar_r R l -> bar_r S (map f l).
 Proof.
 move=> HRS f_surj l.
 elim=> {l}/= [l Hh | l _ HBr]; first by apply/bar_0/(has_r_map HRS Hh).
@@ -1410,13 +1420,14 @@ Definition pbuch pr f : seq {mpoly R[n]} :=
     (if psplt pr1 pr as b return ((b -> _) -> _)
        then fun f => f is_true_true
        else fun f => l) (f pr1)
-   else pr.1.
+  else pr.1.
 
 Definition mbuch b c : seq {mpoly R[n]} :=
   Fix wf_psplt _ pbuch (b, c).
 
 Lemma pbuch_ext pr f g :
-  (forall pr1 (H : psplt pr1 pr), f pr1 H = g pr1 H) -> pbuch f = pbuch g.
+  (forall pr1 (H : psplt pr1 pr), f pr1 H = g pr1 H) ->
+  pbuch f = pbuch g.
 Proof.
 rewrite /pbuch /=.
 move: pr f g; case=> l [|p r] f g H //=.
@@ -1458,7 +1469,7 @@ Lemma mbuch_ind P :
     P b (p :: c) (mbuch b (p :: c))) ->
   (forall b p c, mreduceplusf b p == 0 ->
                    P b c (mbuch b c) -> P b (p :: c) (mbuch b (p :: c))) ->
-  (forall b c, P b c (mbuch b c)).
+  forall b c, P b c (mbuch b c).
 Proof.
 move=> IH1 IH2 IH3 b c.
 pose p := (b,c); rewrite -[b]/p.1 -[c]/p.2; move: p.
@@ -1481,7 +1492,7 @@ Qed.
 
 (* Two sequences define the same ideal *)
 Definition same_ideal l1 l2 : Prop :=
-  (forall p : {mpoly R[n]}, ideal l1 p <-> ideal l2 p).
+  forall p : {mpoly R[n]}, ideal l1 p <-> ideal l2 p.
 
 Lemma same_ideal_id l : same_ideal l l.
 Proof. by []. Qed.
@@ -1501,7 +1512,7 @@ Lemma mbuch_grobner (b c : seq {mpoly R[n]}) :
                 spoly p q \notin c -> spoly q p \notin c
                           -> mreducestar b (spoly p q) 0) ->
   (forall p, p \in c -> ideal b p) ->
-    same_ideal b (mbuch b c) /\ spoly_red (mbuch b c).
+  same_ideal b (mbuch b c) /\ spoly_red (mbuch b c).
 Proof.
 apply mbuch_ind=>
    [{c}b H _|{c}b p c p1 c1 E IH HS HI|b1 p c1 Em IH1 IH2 IH3].

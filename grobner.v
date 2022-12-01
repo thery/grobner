@@ -501,11 +501,11 @@ Proof.
 move=> Lq Lm.
 rewrite /mdiv -scalerAl mcoeffB !mcoeffZ [_ * q]mulrC.
 rewrite [X in _ - _ * X = _]mcoeff_gt_mlead.
-  by rewrite mulr0 subr0.
+- by rewrite mulr0 subr0.
 have [/eqP->|ZX] := boolP ('X_[(m - mlead q)] == 0 :> {mpoly R[n]}).
-  by rewrite mulr0 mlead0 (le_lt_trans (le0x _) Lm).
+- by rewrite mulr0 mlead0 (le_lt_trans (le0x _) Lm).
 have [/eqP->|Zq] := boolP (q == 0).
-  by rewrite mul0r mlead0 (le_lt_trans (le0x _) Lm).
+- by rewrite mul0r mlead0 (le_lt_trans (le0x _) Lm).
 by rewrite mleadM // mleadXm mpoly.addmC submK.
 Qed.
 
@@ -545,14 +545,12 @@ Qed.
 (*                   Division as a reduction relation                         *)
 (******************************************************************************)
 
-Definition red_key : unit.
-Proof. by []. Qed.
-
+Fact red_key : unit. Proof. by []. Qed.
 
 Definition mreduce_lock p q : bool :=
   has (fun m =>
            has (fun r =>
-                   [&& r !=0, (mlead r <= m)%MM & q == mdiv m p r])
+                   [&& r != 0, (mlead r <= m)%MM & q == mdiv m p r])
                 L)
       (msupp p).
 
@@ -640,8 +638,9 @@ Qed.
 (******************************************************************************)
 
 Definition mreducef p : option {mpoly R[n]} :=
-  let L1 := [seq if (r != 0) && (mlead r <= m)%MM
-                 then Some (mdiv m p r) else None | m <- msupp p, r <- L] in
+  let L1 := [seq if (mlead r <= m)%MM
+                 then Some (mdiv m p r) else None |
+                 m <- msupp p, r <- [seq x <- L | x != 0]] in
   nth None L1 (find isSome L1).
 
 Definition irreducible_lock p : bool := ~~ mreducef p.
@@ -656,11 +655,12 @@ set L1 := [seq _ | _ <- _, _ <- _].
 apply: (iffP idP)=> [H1 q /mreduceP[m [r [Im Ir Zr Lr Er]]]|H1].
 - suff /(nth_find None) : has isSome L1 by apply: negP.
   apply/hasP; exists (Some q)=>//.
-  apply/allpairsP; exists (m,r)=>/=.
-  by rewrite Im Ir Zr Lr Er.
+  apply/allpairsP; exists (m,r)=>/=; split=>//.
+  - by rewrite mem_filter Zr.
+  by rewrite Lr Er.
 have : ~~ has isSome L1.
-- apply/hasPn => /= [[q|] // /allpairsP[[/= m r [Im Ir]]]].
-  case: ifP=>// /andP[Zr Lr][Er].
+- apply/hasPn => /= [[q|] // /allpairsP[[/= m r [Im]]]].
+  rewrite mem_filter; case/andP=>Zr Ir; case: ifP=>// Lr [Er].
   by case: (H1 q); apply/mreduceP; exists m, r.
 by rewrite has_find -leqNgt => /(nth_default None)->.
 Qed.
@@ -677,8 +677,8 @@ have [H|] := boolP (has isSome L1); last first.
 - by rewrite has_find -leqNgt=> /(nth_default None)->.
 case E: nth (nth_find None H) => [a|] // _.
 move: H; rewrite has_find => /(mem_nth None); rewrite E.
-move/allpairsP=> [/=[m r]/= [Im Ir]].
-case: ifP=>// /andP[Zr Lr][Er].
+move/allpairsP=> [/=[m r]/= [Im]].
+rewrite mem_filter; case/andP=>Zr Ir; case: ifP=>// Lr [Er].
 by apply/mreduceP; exists m, r.
 Qed.
 
@@ -1201,7 +1201,7 @@ by apply: mreducestar0W.
 Qed.
 
 (******************************************************************************)
-(*        Dickson                                                        *)
+(*        Dickson                                                             *)
 (******************************************************************************)
 
 (* l can be written l1 ++ (a :: l2) ++ (b :: l3)

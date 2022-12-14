@@ -12,7 +12,7 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 
 
 
-A fornalisation of Grobner basis in ssreflect.
+A formalisation of Grobner basis in ssreflect.
 It contains one file
 
 ``grobner.v``
@@ -62,7 +62,7 @@ idealfP
 ``` shell
 git clone https://github.com/thery/grobner.git
 cd grobner
-make   # or make -j <number-of-cores-on-your-machine> 
+make   # or make -j <number-of-cores-on-your-machine>
 make install
 ```
 

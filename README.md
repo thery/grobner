@@ -12,7 +12,7 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 
 
 
-A formalisation of Grobner basis in ssreflect.
+A fornalisation of Grobner basis in ssreflect.
 It contains one file
 
 ``grobner.v``
@@ -49,20 +49,22 @@ idealfP
 - Author(s):
   - Laurent Théry
 - License: [MIT License](LICENSE)
-- Compatible Coq versions: 8.15 or later
+- Compatible Coq versions: 8.16 or later
 - Additional dependencies:
-  - [MathComp ssreflect 1.15 or later](https://math-comp.github.io)
-  - [MathComp algebra 1.15 or later](https://math-comp.github.io)
-  - [MathComp Multinomials 1.5.5 or later](https://github.com/math-comp/multinomials)
+  - [MathComp ssreflect 1.16 or later](https://math-comp.github.io)
+  - [MathComp algebra 1.16 or later](https://math-comp.github.io)
+  - [MathComp Multinomials 1.5.6 or later](https://github.com/math-comp/multinomials)
 - Coq namespace: `grobner`
 - Related publication(s): none
 
 ## Building and installation instructions
 
+To instead build and install manually, do:
+
 ``` shell
 git clone https://github.com/thery/grobner.git
 cd grobner
-make   # or make -j <number-of-cores-on-your-machine>
+make   # or make -j <number-of-cores-on-your-machine> 
 make install
 ```
 

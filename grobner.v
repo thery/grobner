@@ -1,6 +1,6 @@
 Require Import Inverse_Image.
 From mathcomp Require Import all_ssreflect all_algebra order.
-From SsrMultinomials Require Import ssrcomplements freeg mpoly.
+From mathcomp Require Import ssrcomplements freeg mpoly.
 
 Set Implicit Arguments.
 Unset Strict Implicit.

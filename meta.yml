@@ -60,22 +60,22 @@ supported_coq_versions:
 dependencies:
 - opam:
     name: coq-mathcomp-ssreflect
-    version: '{(>= "1.17.0")}'
+    version: '{(>= "2.1.0")}'
   description: |-
-    [MathComp ssreflect 1.17 or later](https://math-comp.github.io)
+    [MathComp ssreflect 2.1 or later](https://math-comp.github.io)
 - opam:
     name: coq-mathcomp-algebra
-    version: '{(>= "1.17.0")}'
+    version: '{(>= "2.1.0")}'
   description: |-
-    [MathComp algebra 1.17 or later](https://math-comp.github.io)
+    [MathComp algebra 2.1 or later](https://math-comp.github.io)
 - opam:
     name: coq-mathcomp-multinomials
-    version: '{(>= "1.6.0")}'
+    version: '{(>= "2.1.0")}'
   description: |-
-    [MathComp Multinomials 1.6.0 or later](https://github.com/math-comp/multinomials)
+    [MathComp Multinomials 2.1.0 or later](https://github.com/math-comp/multinomials)
 
 tested_coq_opam_versions:
-- version: '1.17.0-coq-8.17'
+- version: '2.1.0-coq-8.18'
   repo: 'mathcomp/mathcomp'
 
 namespace: grobner

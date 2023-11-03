@@ -51,9 +51,9 @@ idealfP
 - License: [MIT License](LICENSE)
 - Compatible Coq versions: 8.17 or later
 - Additional dependencies:
-  - [MathComp ssreflect 1.17 or later](https://math-comp.github.io)
-  - [MathComp algebra 1.17 or later](https://math-comp.github.io)
-  - [MathComp Multinomials 1.6.0 or later](https://github.com/math-comp/multinomials)
+  - [MathComp ssreflect 2.1 or later](https://math-comp.github.io)
+  - [MathComp algebra 2.1 or later](https://math-comp.github.io)
+  - [MathComp Multinomials 2.1.0 or later](https://github.com/math-comp/multinomials)
 - Coq namespace: `grobner`
 - Related publication(s): none
 

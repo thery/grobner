@@ -1026,7 +1026,7 @@ Proof. by rewrite /spoly subrr if_same. Qed.
 Lemma spoly_sym p q : spoly p q = - (spoly q p).
 Proof.
 rewrite /spoly [_ * p]mulrC; case: (_ == _); first by rewrite oppr0.
-by rewrite opprB [mlcm _ (mlead p)]mlcmC.
+by rewrite [mlcm _ (mlead p)]mlcmC [RHS]opprB.
 Qed.
 
 Lemma ideal_spoly p q : ideal L p -> ideal L q -> ideal L (spoly p q).

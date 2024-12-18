@@ -6,8 +6,8 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 
 [![Docker CI][docker-action-shield]][docker-action-link]
 
-[docker-action-shield]: https://github.com/thery/grobner/workflows/Docker%20CI/badge.svg?branch=master
-[docker-action-link]: https://github.com/thery/grobner/actions?query=workflow:"Docker%20CI"
+[docker-action-shield]: https://github.com/thery/grobner/actions/workflows/docker-action.yml/badge.svg?branch=master
+[docker-action-link]: https://github.com/thery/grobner/actions/workflows/docker-action.yml
 
 
 
@@ -49,11 +49,11 @@ idealfP
 - Author(s):
   - Laurent Théry
 - License: [MIT License](LICENSE)
-- Compatible Coq versions: 8.17 or later
+- Compatible Coq versions: 8.19 or later
 - Additional dependencies:
-  - [MathComp ssreflect 2.1 or later](https://math-comp.github.io)
-  - [MathComp algebra 2.1 or later](https://math-comp.github.io)
-  - [MathComp Multinomials 2.1.0 or later](https://github.com/math-comp/multinomials)
+  - [MathComp ssreflect 2.3 or later](https://math-comp.github.io)
+  - [MathComp algebra 2.3 or later](https://math-comp.github.io)
+  - [MathComp Multinomials 2.3 or later](https://github.com/math-comp/multinomials)
 - Coq namespace: `grobner`
 - Related publication(s): none
 

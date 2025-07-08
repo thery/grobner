@@ -49,12 +49,12 @@ idealfP
 - Author(s):
   - Laurent Théry
 - License: [MIT License](LICENSE)
-- Compatible Coq versions: 8.19 or later
+- Compatible Rocq/Coq versions: 9.0 or later
 - Additional dependencies:
-  - [MathComp ssreflect 2.3 or later](https://math-comp.github.io)
-  - [MathComp algebra 2.3 or later](https://math-comp.github.io)
-  - [MathComp Multinomials 2.3 or later](https://github.com/math-comp/multinomials)
-- Coq namespace: `grobner`
+  - [MathComp ssreflect 2.4 or later](https://math-comp.github.io)
+  - [MathComp algebra 2.4 or later](https://math-comp.github.io)
+  - [MathComp Multinomials 2.4 or later](https://github.com/math-comp/multinomials)
+- Rocq/Coq namespace: `grobner`
 - Related publication(s): none
 
 ## Building and installation instructions

@@ -1,4 +1,4 @@
-Require Import Inverse_Image.
+From Stdlib Require Import Inverse_Image Wf_nat.
 From mathcomp Require Import all_ssreflect all_algebra order.
 From mathcomp Require Import ssrcomplements freeg mpoly.
 
@@ -51,7 +51,7 @@ Section Grobner.
 
 Section Ideal.
 
-Variable R : ringType.
+Variable R : nzRingType.
 Variable n : nat.
 
 Implicit Types p q : {mpoly R[n]}.
@@ -123,14 +123,14 @@ Qed.
 
 End Ideal.
 
-Lemma ideal_consr (R : ringType) n l (p q : {mpoly R[n]}) :
+Lemma ideal_consr (R : nzRingType) n l (p q : {mpoly R[n]}) :
   ideal l p -> ideal (q::l) p.
 Proof.
 case=> t ->; exists [tuple of 0 :: t] => /=.
 by rewrite big_ord_recl /= mul0r add0r.
 Qed.
 
-Lemma ideal_consl (R : ringType) n l (p q : {mpoly R[n]}) :
+Lemma ideal_consl (R : nzRingType) n l (p q : {mpoly R[n]}) :
   ideal l p -> ideal (p::l) q -> ideal l q.
 Proof.
 case=> [t1] ->; case=> /= t2 ->.
@@ -149,7 +149,7 @@ Qed.
 
 Section Order.
 
-Variable R : ringType.
+Variable R : nzRingType.
 Variable n : nat.
 
 Implicit Types p q : {mpoly R[n]}.
@@ -1341,7 +1341,7 @@ apply: bar_r_map HR1R _ _ _ => [a|].
   case: a => t; exists (tnth t ord0, [multinom [tuple of behead t]]).
   by apply/val_eqP=> /=; apply/eqP/val_eqP; case: t => /= [[]].
 have Hlt a b : (a < b)%N -> (a < b)%coq_nat by move/ssrnat.ltP.
-by exact: bar_r_prod_nil (Wf_nat.well_founded_lt_compat _ _ _ Hlt) IH.
+by exact: bar_r_prod_nil (well_founded_lt_compat _ _ _ Hlt) IH.
 Qed.
 
 (* lplt lp lq = lp = p :: lq with the leading monomial of p is not divisble by
@@ -1366,7 +1366,7 @@ apply: IH; rewrite /= negb_or NH andbT.
 by apply: contra Hb1; rewrite has_cat =>->.
 Qed.
 
-Definition splt n (R : ringType) (lp lq : seq {mpoly R[n]}) : bool :=
+Definition splt n (R : nzRingType) (lp lq : seq {mpoly R[n]}) : bool :=
   smlt [seq mlead p | p <- lp & p != 0]
        [seq mlead q | q <- lq & q != 0].
 

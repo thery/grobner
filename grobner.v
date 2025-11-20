@@ -1,12 +1,12 @@
 From Stdlib Require Import Inverse_Image Wf_nat.
-From mathcomp Require Import all_ssreflect all_algebra order.
+From mathcomp Require Import all_boot order all_algebra.
 From mathcomp Require Import ssrcomplements freeg mpoly.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-Import Monoid GRing.Theory.
+Import GRing.Theory.
 
 Open Scope ring_scope.
 

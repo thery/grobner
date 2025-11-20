@@ -48,8 +48,8 @@ build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
   "coq" {(>= "9.0")}
-  "coq-mathcomp-ssreflect" {(>= "2.4.0")}
-  "coq-mathcomp-algebra" {(>= "2.4.0")}
+  "coq-mathcomp-ssreflect" {(>= "2.5.0")}
+  "coq-mathcomp-algebra" {(>= "2.5.0")}
   "coq-mathcomp-multinomials" {(>= "2.4.0")}
 ]
 

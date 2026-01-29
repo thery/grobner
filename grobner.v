@@ -60,7 +60,7 @@ Implicit Types m : 'X_{1..n}.
 Variable L : seq {mpoly R[n]}.
 
 Definition ideal p : Prop :=
-  exists (t : (size L).-tuple _), p = \sum_(i < size L) t`_i * L`_i.
+  exists (t : (size L).-tuple {mpoly R[n]}), p = \sum_(i < size L) t`_i * L`_i.
 
 Lemma ideal0 : ideal 0.
 Proof.

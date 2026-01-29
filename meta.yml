@@ -16,9 +16,9 @@ description: |-
 
   It defines
 
-  ```coq
-  From mathcomp Require Import all_ssreflect all_algebra.
-  From SsrMultinomials Require Import ssrcomplements freeg mpoly.
+  ```rocq
+  From mathcomp Require Import all_boot all_algebra.
+  From mathcomp Require Import ssrcomplements freeg mpoly.
   From mathcomp.contrib.grobner Require Import grobner.
 
   Print ideal.

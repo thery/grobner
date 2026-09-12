@@ -58,7 +58,7 @@ idealfP
 
 ## Building and installation instructions
 
-To instead build and install manually:
+To build and install manually:
 
 ``` shell
 git clone https://github.com/thery/grobner.git

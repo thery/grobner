@@ -20,7 +20,7 @@ It contains one file
 It defines
 
 ```rocq
-From mathcomp Require Import all_boot all_algebra.
+From mathcomp Require Import boot algebra.
 From mathcomp Require Import ssrcomplements freeg mpoly.
 From mathcomp.contrib.grobner Require Import grobner.
 
@@ -49,21 +49,32 @@ idealfP
 - Author(s):
   - Laurent Théry
 - License: [MIT License](LICENSE)
-- Compatible Rocq/Coq versions: 9.0 or later
 - Additional dependencies:
-  - [MathComp ssreflect 2.5 or later](https://math-comp.github.io)
-  - [MathComp algebra 2.5 or later](https://math-comp.github.io)
-  - [MathComp Multinomials 2.4 or later](https://github.com/math-comp/multinomials)
+  - [MathComp ssreflect 2.6 or later](https://math-comp.github.io)
+  - [MathComp algebra 2.6 or later](https://math-comp.github.io)
+  - [MathComp Multinomials 2.5 or later](https://github.com/math-comp/multinomials)
 - Rocq/Coq namespace: `grobner`
 - Related publication(s): none
 
 ## Building and installation instructions
 
-To build and install manually, do:
+The easiest way to install the latest released version of Grobner
+is via [OPAM](https://opam.ocaml.org/doc/Install.html):
+
+```shell
+opam repo add rocq-released https://rocq-prover.org/opam/released
+opam install coq-grobner
+```
+
+To instead build and install manually, you need to make sure that all the
+libraries this development depends on are installed.  The easiest way to do that
+is still to rely on opam:
 
 ``` shell
 git clone https://github.com/thery/grobner.git
 cd grobner
+opam repo add rocq-released https://rocq-prover.org/opam/released
+opam install --deps-only .
 make   # or make -j <number-of-cores-on-your-machine> 
 make install
 ```

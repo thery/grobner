@@ -20,7 +20,7 @@ It contains one file
 It defines
 
 ```rocq
-From mathcomp Require Import all_boot all_algebra.
+From mathcomp Require Import boot algebra.
 From mathcomp Require Import ssrcomplements freeg mpoly.
 From mathcomp.contrib.grobner Require Import grobner.
 
@@ -47,10 +47,10 @@ idealfP
 build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
-  "coq" {(>= "9.0")}
-  "coq-mathcomp-ssreflect" {(>= "2.5.0")}
-  "coq-mathcomp-algebra" {(>= "2.5.0")}
-  "coq-mathcomp-multinomials" {(>= "2.4.0")}
+  "coq" 
+  "rocq-mathcomp-ssreflect" {(>= "2.6.0")}
+  "rocq-mathcomp-algebra" {(>= "2.6.0")}
+  "rocq-mathcomp-multinomials" {(>= "2.5.0")}
 ]
 
 tags: [
